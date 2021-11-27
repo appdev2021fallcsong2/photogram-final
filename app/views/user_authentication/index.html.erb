@@ -1,0 +1,56 @@
+<h1>List of users</h1>
+
+<table border = "1">
+  <th>
+    Username
+  </th>
+
+  <th>
+    Private?
+  </th>
+  <% if @current_user != nil %>
+  <th>
+    
+  </th>
+  <% end %>
+
+  <th>
+    
+  </th>
+
+  <% @list_of_users.each do |a_user| %>
+
+  <tr>
+    <td>
+      <%= a_user.username %>
+    </td>
+
+    <td>
+      <% if a_user.private %>
+      <%= "Yes" %>
+      <% else %>
+      <%= "No"%>
+      <% end %>
+    </td>
+
+  <% if @current_user != nil %>
+    <td>
+      <form action = "/insert_follow_request/<%= a_user.id%>" method = "post">
+      <input type = "hidden" name = "query_recipient_id" value = <%= a_user.id %>>
+      <button>Follow</button>
+    </td>
+  <% end %>
+    <td>
+      <% if @current_user != nil %>
+        <% if a_user.private %>
+          <a href ="/not_authorized">Show details</a>
+        <% else %>
+          <a href ="/users/<%= a_user.username %>">Show details</a>
+        <% end %>
+      <% else %>
+        <a href ="/not_signed_in">Show details</a>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+</table>

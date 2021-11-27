@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+
+  # Homepage
+  get("/", { :controller => "user_authentication", :action => "index"})
+
+  get("/not_signed_in", { :controller => "user_authentication", :action => "redirect"})
+  get("/not_authorized", { :controller => "user_authentication", :action => "redirecthome"})
   # Routes for the Photo resource:
 
   # CREATE
@@ -16,9 +22,14 @@ Rails.application.routes.draw do
   # DELETE
   get("/delete_photo/:path_id", { :controller => "photos", :action => "destroy" })
 
+  
+  
   #------------------------------
 
   # Routes for the User account:
+
+  get("/users", { :controller => "user_authentication", :action => "index"})
+  get("/users/:username", { :controller => "user_authentication", :action => "show"})
 
   # SIGN UP FORM
   get("/user_sign_up", { :controller => "user_authentication", :action => "sign_up_form" })        
@@ -62,6 +73,8 @@ Rails.application.routes.draw do
   # DELETE
   get("/delete_like/:path_id", { :controller => "likes", :action => "destroy" })
 
+  
+  
   #------------------------------
 
   # Routes for the Comment resource:
@@ -86,7 +99,7 @@ Rails.application.routes.draw do
   # Routes for the Follow request resource:
 
   # CREATE
-  post("/insert_follow_request", { :controller => "follow_requests", :action => "create" })
+  post("/insert_follow_request/:a_recipient_id", { :controller => "follow_requests", :action => "create" })
           
   # READ
   get("/follow_requests", { :controller => "follow_requests", :action => "index" })

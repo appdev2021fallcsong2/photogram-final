@@ -2,6 +2,19 @@ class UserAuthenticationController < ApplicationController
   # Uncomment this if you want to force users to sign in before any other actions
   # skip_before_action(:force_user_sign_in, { :only => [:sign_up_form, :create, :sign_in_form, :create_cookie] })
 
+  def index
+    @list_of_users = User.all
+    render({ :template => "/user_authentication/index.html.erb"})
+  end
+
+  def show
+    @the_id = params.fetch("username")
+    @list_of_users = User.all
+    @the_user = @list_of_users.where({ :username => @the_id}).at(0)
+    render({ :template => "/user_authentication/show.html.erb"})
+  end
+
+
   def sign_in_form
     render({ :template => "user_authentication/sign_in.html.erb" })
   end
@@ -41,8 +54,8 @@ class UserAuthenticationController < ApplicationController
     @user.email = params.fetch("query_email")
     @user.password = params.fetch("query_password")
     @user.password_confirmation = params.fetch("query_password_confirmation")
-    @user.comments_count = params.fetch("query_comments_count")
-    @user.likes_count = params.fetch("query_likes_count")
+    @user.comments_count = 0
+    @user.likes_count = 0
     @user.private = params.fetch("query_private", false)
     @user.username = params.fetch("query_username")
 
@@ -85,6 +98,14 @@ class UserAuthenticationController < ApplicationController
     reset_session
     
     redirect_to("/", { :notice => "User account cancelled" })
+  end
+
+  def redirect
+    redirect_to("/user_sign_in", { :notice => "You have to sign in first." })
+  end
+
+  def redirecthome
+    redirect_to("/", { :notice => "You're not authorized for that." })
   end
  
 end
