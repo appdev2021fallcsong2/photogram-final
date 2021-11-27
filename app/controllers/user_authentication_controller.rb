@@ -108,4 +108,14 @@ class UserAuthenticationController < ApplicationController
     redirect_to("/", { :notice => "You're not authorized for that." })
   end
  
+
+  def feed
+    @the_id = params.fetch("a_user")
+    @list_of_users = User.all
+    @the_user = @list_of_users.where({ :username => @the_id}).at(0)
+    render({ :template => "user_authentication/feed.html.erb"})
+  end
+
+
+
 end
