@@ -80,9 +80,15 @@
     </td>
 
     <td>
-      <a href="/photos/<%= a_photo.id %>">
-        Show details
-      </a>
+      <% if @current_user != nil %>
+        <a href="/photos/<%= a_photo.id %>">
+          Show details
+        </a>
+      <% else %>
+        <a href="/not_signed_in">
+          Show details
+        </a>        
+      <% end %>
     </td>
   </tr>
   <% end %>

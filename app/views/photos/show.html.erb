@@ -36,7 +36,7 @@
   </dt>
   <dd>
     <% if @the_photo.likes_count != nil %>
-    <% @the_photo.likes_count %>
+      <%= @the_photo.likes_count %>
     <% else %>
     0
     <% end %>
@@ -47,7 +47,7 @@
   </dt>
   <dd>
     <% if @the_photo.comments_count != nil %>
-    <% @the_photo.comments_count %>
+      <%= @the_photo.comments_count %>
     <% else %>
     0
     <% end %>
@@ -57,9 +57,11 @@
     Fans
   </dt>
   <dd>
-    <% @the_photo.likes.each do |user| %>
-    <%= User.where({ :id => user.fan_id }).at(0).username %>
+    <% list_of_fans = Array.new %>
+    <% @the_photo.likes.reverse_each do |user| %>
+    <% list_of_fans.push(user.fan.username) %>
     <% end %>
+    <%= list_of_fans.to_sentence %>
   </dd>
 
   <dt>
@@ -78,31 +80,37 @@
 </dl>
 
 
-<% if @current_user != nil %>
+<% if @current_user.id == @the_photo.owner.id %>
 <dt>
   Edit photo
 </dt>
+  <dd>
+  <form action="/modify_photo/<%= @the_photo.id %>" method="post">
+    <label for="image_box">
+      Image URL
+    </label>
+    <input type="file" id="image_box" name="query_image" placeholder = "No file chosen">
+
+    <label for="caption_box">
+      Caption
+    </label>
+    <textarea id="caption_box" name="query_caption" rows="2"  value = <%= @the_photo.caption %>><%= @the_photo.caption %></textarea>
+
+    <label for="owner_id_box">
+    </label>
+    <input type="hidden" id="owner_id_box" name="query_owner_id" value = <%= @current_user.id %>>
+
+    <button>
+      Update photo
+    </button>
+
+  </form>
+  </dd>
+<dt>
+  Delete photo
+</dt>
 <dd>
-<form action="/modify_photo/<%= @the_photo.id %>" method="post">
-  <label for="image_box">
-    Image URL
-  </label>
-  <input type="file" id="image_box" name="query_image" placeholder = "No file chosen">
-
-  <label for="caption_box">
-    Caption
-  </label>
-  <textarea id="caption_box" name="query_caption" rows="2"  value = <%= @the_photo.caption %>><%= @the_photo.caption %></textarea>
-
-  <label for="owner_id_box">
-  </label>
-  <input type="hidden" id="owner_id_box" name="query_owner_id" value = <%= @current_user.id %>>
-
-  <button>
-    Update photo
-  </button>
-
-</form>
+  <a href = "/delete_photo/<%= @the_photo.id %>">Delete this photo<a>
 </dd>
 
 
@@ -142,11 +150,14 @@
   <% end %>
 </table>
 
+
+
 <h3>Add a new comment</h3>
 <form action="/insert_comment"  method="post" >
     <input id="browser_photo_id" type="hidden" value="<%= @the_photo.id %>" name="query_photo_id">
+    <input id="browser_id" type="hidden" value="<%= @current_user.id %>" name="current_user_id">
     <label for="comment_box">
-      Caption
+      Comment
     </label>
 
 

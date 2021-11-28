@@ -24,7 +24,11 @@ class CommentsController < ApplicationController
     the_comment.photo_id = params.fetch("query_photo_id")
 
     if the_comment.valid?
+      the_photo = the_comment.photo
+      current_comment_count = the_photo.comments_count
+      the_photo.comments_count = current_comment_count + 1
       the_comment.save
+      the_photo.save
       redirect_to("/photos/#{the_comment.photo_id}", { :notice => "Comment created successfully." })
     else
       redirect_to("/comments/#{the_comment.photo_id}", { :notice => "Comment failed to create successfully." })
@@ -50,8 +54,11 @@ class CommentsController < ApplicationController
   def destroy
     the_id = params.fetch("path_id")
     the_comment = Comment.where({ :id => the_id }).at(0)
-
+    the_photo = the_comment.photo
+    current_comment_count = the_photo.comments_count
+    the_photo.comments_count = current_comment_count - 1
     the_comment.destroy
+    the_photo.save
 
     redirect_to("/comments", { :notice => "Comment deleted successfully."} )
   end
