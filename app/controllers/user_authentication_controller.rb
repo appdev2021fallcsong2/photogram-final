@@ -117,5 +117,19 @@ class UserAuthenticationController < ApplicationController
   end
 
 
+  def liked
+    @the_id = params.fetch("a_user")
+    @list_of_users = User.all
+    @the_user = @list_of_users.where({ :username => @the_id}).at(0)
+    render({ :template => "user_authentication/liked.html.erb"})
+  end
+
+  def discover
+    @the_id = params.fetch("a_user")
+    @list_of_users = User.all
+    @the_user = @list_of_users.where({ :username => @the_id}).at(0)
+    render({ :template => "user_authentication/discover.html.erb"})
+  end
+
 
 end

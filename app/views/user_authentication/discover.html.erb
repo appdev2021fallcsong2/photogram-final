@@ -1,0 +1,93 @@
+<h1><%= @the_user.username %></h1>
+
+<dl>
+  <dt>Private</dt>
+  <dd><%=@the_user.private%></dd>
+
+  <dt>Followers</dt>
+  <dd><%=@the_user.followrequestsfromothers.where({ :status => "accepted"}).count %></dd>
+  
+  <dt>Following</dt>
+  <dd><%=@the_user.followrequeststoothers.where({ :status => "accepted"}).count %></dd>
+</dl>
+
+<ul>
+  <li>
+    <a href = "/users/<%= @the_user.username %>">Profile</a>
+  </li>
+
+  <li>
+    <a href = "/users/<%= @the_user.username %>/liked_photos">Liked photos</a>
+  </li>
+
+  <li>
+    <a href = "/users/<%= @the_user.username %>/feed">Feed</a>
+  </li>
+
+  <li>
+    <a href = "/users/<%= @the_user.username %>/discover">Discover</a>
+  </li>
+</ul>
+
+<% discover = 0%>
+<% @the_user.followrequeststoothers.where({ :status => "accepted"}).each do |following| %>
+  <% discover = discover + following.recipient.likes.count %>
+<% end %>
+
+<h2>Discover (<%= discover %>)</h2>
+
+<table border = "1">
+  <th>
+    Image
+  </th>
+
+  <th>
+    Owner
+  </th>
+
+  <th>
+    Caption
+  </th>
+
+  <th>
+    Posted
+  </th>
+
+  <th>
+    Likes
+  </th>
+
+  <th>
+  </th>
+
+  <% @the_user.followrequeststoothers.where({ :status => "accepted"}).each do |following| %>
+    <% following.recipient.likes.each do |like| %>
+    <tr>
+      <td>
+        <img src = <%= like.photo.image%>>
+      </td>
+
+      <td>
+        <%= like.photo.owner.username%>
+      </td>
+
+      <td>
+        <%= like.photo.caption %>
+      </td>
+
+      <td>
+        <%= time_ago_in_words(like.photo.created_at) %> ago
+      </td>
+
+      <td>
+        <%= like.photo.likes_count %>
+      </td>
+
+      <td>
+        <a href="/photos/<%=like.photo.id%>">Show details</a>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
+</table>
+ 

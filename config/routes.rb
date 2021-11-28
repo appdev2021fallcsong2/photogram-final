@@ -120,7 +120,8 @@ Rails.application.routes.draw do
   # Routes for the Feed resource:
 
   get("/users/:a_user/feed", { :controller => "user_authentication", :action =>"feed"})
-
+  get("/users/:a_user/liked_photos", { :controller => "user_authentication", :action =>"liked"})
+  get("/users/:a_user/discover", { :controller => "user_authentication", :action =>"discover"})
 
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
