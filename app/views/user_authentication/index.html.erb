@@ -54,7 +54,11 @@
     <td>
       <% if @current_user != nil %>
         <% if a_user.private %>
-          <a href ="/not_authorized">Show details</a>
+          <% if a_user.id != @current_user.id %>
+            <a href ="/not_authorized">Show details</a>
+          <% else %>
+            <a href ="/users/<%= a_user.username %>">Show details</a>
+          <% end %>
         <% else %>
           <a href ="/users/<%= a_user.username %>">Show details</a>
         <% end %>
