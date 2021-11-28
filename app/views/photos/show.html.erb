@@ -35,36 +35,78 @@
     Likes count
   </dt>
   <dd>
-    <%= @the_photo.likes_count %>
+    <% if @the_photo.likes_count != nil %>
+    <% @the_photo.likes_count %>
+    <% else %>
+    0
+    <% end %>
   </dd>
 
   <dt>
     Comments count
   </dt>
   <dd>
-    <%= @the_photo.comments_count %>
+    <% if @the_photo.comments_count != nil %>
+    <% @the_photo.comments_count %>
+    <% else %>
+    0
+    <% end %>
   </dd>
 
   <dt>
     Fans
   </dt>
   <dd>
-    <% fans = @the_photo.likes.count  %>
-    <% incr = 0 %>
-    <% (fans-1).times do %>
-    <%= @the_photo.likes[incr].fan.username %>, 
-    <% incr = incr + 1 %>
+    <% @the_photo.likes.each do |user| %>
+    <%= User.where({ :id => user.fan_id }).at(0).username %>
     <% end %>
-    and <%= @the_photo.likes[fans-1].fan.username %>
   </dd>
 
   <dt>
     Add a fan
   </dt>
-  <dd><button>Like</button></dd>
+  <dd>
+    <% if @the_photo.likes.where({ :fan_id => @current_user.id }).at(0) == nil %>
+    <form action ="/insert_like" method = "post">
+    <input type = "hidden" name ="query_photo_id" value = <%= @the_photo.id %>>
+    <button>Like</button>
+    </form>
+    <% else %>
+    <a href ="/delete_like/<%= @the_photo.likes.where({ :fan_id => @current_user.id }).at(0).id %>">Unlike</a>
+    <% end %>
+  </dd>
 </dl>
 
 
+<% if @current_user != nil %>
+<dt>
+  Edit photo
+</dt>
+<dd>
+<form action="/modify_photo/<%= @the_photo.id %>" method="post">
+  <label for="image_box">
+    Image URL
+  </label>
+  <input type="file" id="image_box" name="query_image" placeholder = "No file chosen">
+
+  <label for="caption_box">
+    Caption
+  </label>
+  <textarea id="caption_box" name="query_caption" rows="2"  value = <%= @the_photo.caption %>><%= @the_photo.caption %></textarea>
+
+  <label for="owner_id_box">
+  </label>
+  <input type="hidden" id="owner_id_box" name="query_owner_id" value = <%= @current_user.id %>>
+
+  <button>
+    Update photo
+  </button>
+
+</form>
+</dd>
+
+
+<% end %>
 
 <h2>
   Comments

@@ -18,17 +18,9 @@
   </label>
   <textarea id="caption_box" name="query_caption" rows="2"  placeholder = "Enter a caption for the photo..."></textarea>
 
-  <label for="comments_count_box">
-  </label>
-  <input type="hidden" id="comments_count_box" name="query_comments_count">
-
-  <label for="likes_count_box">
-  </label>
-  <input type="hidden" id="likes_count_box" name="query_likes_count">
-
   <label for="owner_id_box">
   </label>
-  <input type="hidden" id="owner_id_box" name="query_owner_id">
+  <input type="hidden" id="owner_id_box" name="query_owner_id" value = <%= @current_user.id %>>
 
   <button>
     Add photo
@@ -64,6 +56,8 @@
   </tr>
 
   <% @list_of_photos.each do |a_photo| %>
+  <% if a_photo.owner.private%>
+  <%else %>
   <tr>
     <td>
       <img src = <%=a_photo.image %>>
@@ -92,6 +86,7 @@
     </td>
   </tr>
   <% end %>
+<% end %>
 </table>
 
 

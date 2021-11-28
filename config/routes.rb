@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get("/not_signed_in", { :controller => "user_authentication", :action => "redirect"})
   get("/not_authorized", { :controller => "user_authentication", :action => "redirecthome"})
+  
   # Routes for the Photo resource:
 
   # CREATE
